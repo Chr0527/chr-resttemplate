@@ -6,6 +6,7 @@ import com.chryl.model.SbProtModel;
 import com.chryl.response.ReturnResult;
 import com.chryl.response.UserInfo;
 import com.chryl.utils.GsonUtil;
+import com.chryl.utils.HttpClientUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -205,4 +206,31 @@ public class ChrResttemplateApplicationTests {
         System.out.println(data);
     }
 
+    //HttpClient###########################################################
+    //doGet
+    @Test
+    public void show13() {
+        String url = "http://127.0.0.1:8099/rest/testp";
+        Map<String, String> map = new HashMap<>();
+        map.put("name", "nanc");
+        map.put("age", "24");
+        map.put("clazz", "12");
+        String s = HttpClientUtil.doGet(url, map);
+        ReturnResult returnResult = GsonUtil.json2Bean(s, ReturnResult.class);
+        UserInfo data = returnResult.getData();
+        System.out.println(data);
+    }
+
+    //doPost
+    @Test
+    public void show14() {
+        String url = "http://127.0.0.1:8099/rest/testm";
+        Map<String, String> map = new HashMap<>();
+        map.put("id", "nanc");
+        map.put("name", "nanc");
+        String s = HttpClientUtil.doPost(url, map);
+        ReturnResult returnResult = GsonUtil.json2Bean(s, ReturnResult.class);
+        UserInfo data = returnResult.getData();
+        System.out.println(data);
+    }
 }
