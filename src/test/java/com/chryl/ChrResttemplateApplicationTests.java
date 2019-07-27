@@ -3,6 +3,8 @@ package com.chryl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chryl.model.SbProtModel;
+import com.chryl.response.ReturnResult;
+import com.chryl.response.UserInfo;
 import com.chryl.utils.GsonUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,11 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -158,5 +164,45 @@ public class ChrResttemplateApplicationTests {
     TaotaoResult taotaoResult3 = JSON.parseObject(stringResponseEntity2.getBody(), TaotaoResult.class);
         System.out.println("ces2:" + taotaoResult3.getData());
 */
+
+
+    @Test
+    public void sho10() {
+        String url = "http://127.0.0.1:8099/user/login";
+        MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
+        request.add("userName", "nanc");
+        request.add("userPassword", "1234");
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        ResponseEntity<String> resp = restTemplate.postForEntity(url, request, String.class);
+        System.out.println(resp.getBody());
+    }
+
+    //Post,@RequestParam------postForEntity
+    @Test
+    public void sho11() {
+        String url = "http://127.0.0.1:8099/rest/testm";
+        MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
+        request.add("id", "12324");
+        request.add("name", "nanc");
+
+        ResponseEntity<ReturnResult> resp = restTemplate.postForEntity(url, request, ReturnResult.class);
+        ReturnResult body = resp.getBody();
+        UserInfo data = body.getData();
+        System.err.println(data.getUserId());
+        System.out.println(data);
+    }
+
+    //Get ,@RequestParam-----getForObject
+    @Test
+    public void sho12() {
+        String url = "http://127.0.0.1:8099/rest/testp?name={name}&age={age}&clazz={clazz}";
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "nanc");
+        map.put("age", 34);
+        map.put("clazz", "12");
+        ReturnResult forObject = restTemplate.getForObject(url, ReturnResult.class, map);
+        UserInfo data = forObject.getData();
+        System.out.println(data);
+    }
 
 }
